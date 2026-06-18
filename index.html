@@ -4,26 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Athens Travel Guide</title>
+
   <style>
     :root {
       --bg: #f6f8fb;
       --card: #ffffff;
-      --text: #16202a;
+      --text: #172033;
       --muted: #667085;
       --line: #e5e7eb;
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
       --chip: #eef2ff;
       --chip-active: #dbeafe;
-      --danger-bg: #fff7ed;
-      --danger-text: #9a3412;
+      --notice-bg: #fff7ed;
+      --notice-text: #9a3412;
       --shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
       --radius: 18px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -76,8 +75,7 @@
       margin-bottom: 10px;
     }
 
-    button,
-    .maps-link {
+    button, .maps-link {
       border: 0;
       font: inherit;
       cursor: pointer;
@@ -120,11 +118,6 @@
       gap: 8px;
       overflow-x: auto;
       padding: 10px 0 4px;
-      scrollbar-width: none;
-    }
-
-    .categories::-webkit-scrollbar {
-      display: none;
     }
 
     .category-btn {
@@ -186,8 +179,6 @@
 
     .category-label {
       display: inline-flex;
-      align-items: center;
-      gap: 6px;
       background: #f2f4f7;
       color: #475467;
       border-radius: 999px;
@@ -224,8 +215,8 @@
     .notice {
       border-radius: 14px;
       padding: 12px;
-      background: var(--danger-bg);
-      color: var(--danger-text);
+      background: var(--notice-bg);
+      color: var(--notice-text);
       font-weight: 700;
       margin-bottom: 14px;
     }
@@ -276,6 +267,7 @@
     }
   </style>
 </head>
+
 <body>
   <main class="app">
     <header>
@@ -283,64 +275,49 @@
       <p class="subtitle" data-i18n="subtitle">A compact guide to highlights in Athens.</p>
     </header>
 
-    <section class="toolbar" aria-label="Guide controls">
-      <div class="language-toggle" aria-label="Language">
+    <section class="toolbar">
+      <div class="language-toggle">
         <button type="button" id="lang-en" data-lang="en">English</button>
         <button type="button" id="lang-vi" data-lang="vi">Tiếng Việt</button>
       </div>
 
-      <input
-        id="search"
-        class="search"
-        type="search"
-        autocomplete="off"
-        placeholder="Search attractions..."
-        aria-label="Search attractions"
-      />
-
-      <div class="categories" id="categories" aria-label="Categories"></div>
+      <input id="search" class="search" type="search" autocomplete="off" placeholder="Search attractions..." />
+      <div class="categories" id="categories"></div>
     </section>
 
     <p class="meta" id="result-count"></p>
-    <section class="list" id="attractions-list" aria-live="polite"></section>
+    <section class="list" id="attractions-list"></section>
 
     <footer>
-      <span data-i18n="footer">Images and audio are loaded from external Google Drive links.</span>
+      <span data-i18n="footer">Images are loaded from public image URLs.</span>
     </footer>
   </main>
 
   <script>
     // ============================================================
-    // ===== EDIT YOUR ATTRACTIONS HERE ===========================
-    // Replace image/audio URLs with public, direct Google Drive links.
-    //
-    // Tip for Drive media links:
-    // Use a direct format like:
-    // https://drive.google.com/uc?export=view&id=YOUR_FILE_ID
-    // or:
-    // https://drive.google.com/uc?export=download&id=YOUR_FILE_ID
+    // EDIT YOUR ATTRACTIONS HERE
+    // Audio is empty for now. Later you can add audio links.
     // ============================================================
 
     const attractions = [
       {
-        {
-  id: 1,
-  category: "Historical",
-  title: {
-    en: "Acropolis",
-    vi: "Acropolis"
-  },
-  description: {
-    en: "The Acropolis is the most iconic landmark in Athens. Standing high above the city, this ancient citadel includes famous monuments such as the Parthenon and offers wide views over modern Athens.",
-    vi: "Acropolis là địa danh nổi tiếng nhất ở Athens. Nằm trên ngọn đồi cao nhìn xuống thành phố, khu thành cổ này có nhiều công trình nổi tiếng như đền Parthenon và mang đến tầm nhìn rộng ra Athens hiện đại."
-  },
-  image: "Acroplis-Athens.webp",
-  audio: {
-    en: "",
-    vi: ""
-  },
-  maps_url: "https://www.google.com/maps/search/?api=1&query=Acropolis%20Athens"
-},
+        id: 1,
+        category: "Historical",
+        title: {
+          en: "Acropolis",
+          vi: "Acropolis"
+        },
+        description: {
+          en: "The Acropolis is the most iconic landmark in Athens. Standing high above the city, this ancient citadel includes famous monuments such as the Parthenon and offers wide views over modern Athens.",
+          vi: "Acropolis là địa danh nổi tiếng nhất ở Athens. Nằm trên ngọn đồi cao nhìn xuống thành phố, khu thành cổ này có nhiều công trình nổi tiếng như đền Parthenon và mang đến tầm nhìn rộng ra Athens hiện đại."
+        },
+        image: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Acropolis_of_Athens_01361.JPG",
+        audio: {
+          en: "",
+          vi: ""
+        },
+        maps_url: "https://www.google.com/maps/search/?api=1&query=Acropolis%20Athens"
+      },
       {
         id: 2,
         category: "Historical",
@@ -352,10 +329,10 @@
           en: "The Parthenon is the most famous temple on the Acropolis. Built in the 5th century BC, it was dedicated to the goddess Athena and remains one of the great symbols of ancient Greece.",
           vi: "Đền Parthenon là ngôi đền nổi tiếng nhất trên Acropolis. Được xây dựng vào thế kỷ thứ 5 trước Công nguyên, đền thờ nữ thần Athena và vẫn là một trong những biểu tượng lớn của Hy Lạp cổ đại."
         },
-        image: "https://drive.google.com/uc?export=view&id=YOUR_PARTHENON_IMAGE_ID",
+        image: "https://upload.wikimedia.org/wikipedia/commons/d/da/The_Parthenon_in_Athens.jpg",
         audio: {
-          en: "https://drive.google.com/uc?export=download&id=YOUR_PARTHENON_AUDIO_EN_ID",
-          vi: "https://drive.google.com/uc?export=download&id=YOUR_PARTHENON_AUDIO_VI_ID"
+          en: "",
+          vi: ""
         },
         maps_url: "https://www.google.com/maps/search/?api=1&query=Parthenon%20Athens"
       },
@@ -370,10 +347,10 @@
           en: "Plaka is one of the oldest and most charming neighborhoods in Athens. Its narrow streets, small shops, cafés and neoclassical houses make it a pleasant area to explore on foot.",
           vi: "Plaka là một trong những khu phố cổ và quyến rũ nhất ở Athens. Những con đường nhỏ, cửa hàng, quán cà phê và các ngôi nhà tân cổ điển khiến nơi đây rất phù hợp để đi bộ khám phá."
         },
-        image: "https://drive.google.com/uc?export=view&id=YOUR_PLAKA_IMAGE_ID",
+        image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Plaka_Athens_Greece.jpg",
         audio: {
-          en: "https://drive.google.com/uc?export=download&id=YOUR_PLAKA_AUDIO_EN_ID",
-          vi: "https://drive.google.com/uc?export=download&id=YOUR_PLAKA_AUDIO_VI_ID"
+          en: "",
+          vi: ""
         },
         maps_url: "https://www.google.com/maps/search/?api=1&query=Plaka%20Athens"
       },
@@ -388,10 +365,10 @@
           en: "Lycabettus Hill is one of the best viewpoints in Athens. From the top, visitors can see the Acropolis, the city center and, on clear days, the sea in the distance.",
           vi: "Đồi Lycabettus là một trong những điểm ngắm cảnh đẹp nhất ở Athens. Từ trên đỉnh đồi, du khách có thể nhìn thấy Acropolis, trung tâm thành phố và vào những ngày trời quang có thể thấy biển ở phía xa."
         },
-        image: "https://drive.google.com/uc?export=view&id=YOUR_LYCABETTUS_IMAGE_ID",
+        image: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Lycabettus_Hill_from_Acropolis.jpg",
         audio: {
-          en: "https://drive.google.com/uc?export=download&id=YOUR_LYCABETTUS_AUDIO_EN_ID",
-          vi: "https://drive.google.com/uc?export=download&id=YOUR_LYCABETTUS_AUDIO_VI_ID"
+          en: "",
+          vi: ""
         },
         maps_url: "https://www.google.com/maps/search/?api=1&query=Lycabettus%20Hill%20Athens"
       },
@@ -406,17 +383,17 @@
           en: "The National Archaeological Museum is one of the most important museums in Greece. It contains an extensive collection of ancient Greek art, sculpture, jewelry and historical objects.",
           vi: "Bảo tàng Khảo cổ Quốc gia là một trong những bảo tàng quan trọng nhất ở Hy Lạp. Nơi đây có bộ sưu tập lớn về nghệ thuật Hy Lạp cổ đại, tượng điêu khắc, trang sức và các hiện vật lịch sử."
         },
-        image: "https://drive.google.com/uc?export=view&id=YOUR_MUSEUM_IMAGE_ID",
+        image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/National_Archaeological_Museum_Athens.jpg",
         audio: {
-          en: "https://drive.google.com/uc?export=download&id=YOUR_MUSEUM_AUDIO_EN_ID",
-          vi: "https://drive.google.com/uc?export=download&id=YOUR_MUSEUM_AUDIO_VI_ID"
+          en: "",
+          vi: ""
         },
         maps_url: "https://www.google.com/maps/search/?api=1&query=National%20Archaeological%20Museum%20Athens"
       }
     ];
 
     // ============================================================
-    // ===== APP CODE BELOW - NORMALLY NO NEED TO EDIT ============
+    // APP CODE BELOW
     // ============================================================
 
     const categories = ["All", "Historical", "Museum", "Neighborhood", "Viewpoint", "Food & Drink", "Shopping"];
@@ -432,7 +409,7 @@
         openMaps: "Open in Google Maps",
         results: count => `${count} ${count === 1 ? "attraction" : "attractions"} found`,
         noResults: "No attractions found. Try another search or category.",
-        footer: "Images and audio are loaded from external Google Drive links."
+        footer: "Images are loaded from public image URLs."
       },
       vi: {
         subtitle: "Cẩm nang ngắn gọn về các điểm nổi bật ở Athens.",
@@ -444,7 +421,7 @@
         openMaps: "Mở trong Google Maps",
         results: count => `Tìm thấy ${count} địa điểm`,
         noResults: "Không tìm thấy địa điểm nào. Hãy thử từ khóa hoặc danh mục khác.",
-        footer: "Hình ảnh và âm thanh được tải từ các liên kết Google Drive bên ngoài."
+        footer: "Hình ảnh được tải từ các liên kết công khai."
       }
     };
 
@@ -527,6 +504,7 @@
       img.src = item.image;
       img.alt = item.title[state.language] || item.title.en || "Attraction image";
       img.loading = "lazy";
+
       img.addEventListener("error", () => {
         wrapper.innerHTML = "";
         wrapper.textContent = t("imageUnavailable");
@@ -550,6 +528,7 @@
       audio.controls = true;
       audio.preload = "none";
       audio.src = audioUrl;
+
       audio.addEventListener("error", () => {
         const notice = document.createElement("div");
         notice.className = "notice";
@@ -611,6 +590,7 @@
 
         card.appendChild(createImage(item));
         card.appendChild(content);
+
         listEl.appendChild(card);
       });
     }
