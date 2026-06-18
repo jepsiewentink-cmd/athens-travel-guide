@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Athens Travel Guide</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #16202a;
+      --muted: #667085;
+      --line: #e5e7eb;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --chip: #eef2ff;
+      --chip-active: #dbeafe;
+      --danger-bg: #fff7ed;
+      --danger-text: #9a3412;
+      --shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .app {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 18px 14px 40px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #ffffff 0%, #eef5ff 100%);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 7vw, 2.6rem);
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(246, 248, 251, 0.95);
+      backdrop-filter: blur(12px);
+      padding: 10px 0 12px;
+    }
+
+    .language-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    button,
+    .maps-link {
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+      border-radius: 999px;
+      min-height: 44px;
+      font-weight: 700;
+    }
+
+    .language-toggle button {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .language-toggle button.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .search {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 16px;
+      font-size: 1rem;
+      outline: none;
+      background: white;
+      box-shadow: 0 4px 14px rgba(16, 24, 40, 0.04);
+    }
+
+    .search:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .categories {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 0 4px;
+      scrollbar-width: none;
+    }
+
+    .categories::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-btn {
+      white-space: nowrap;
+      background: var(--chip);
+      color: #344054;
+      border: 1px solid #dbe4ff;
+      padding: 0 14px;
+      flex: 0 0 auto;
+    }
+
+    .category-btn.active {
+      background: var(--chip-active);
+      color: var(--primary-dark);
+      border-color: #93c5fd;
+    }
+
+    .meta {
+      margin: 4px 2px 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .image-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: #eef2f7;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-weight: 700;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    .category-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f2f4f7;
+      color: #475467;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .description {
+      margin: 0 0 14px;
+      color: #344054;
+      font-size: 1rem;
+    }
+
+    .audio-label {
+      margin: 0 0 8px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    audio {
+      width: 100%;
+      margin-bottom: 14px;
+    }
+
+    .notice {
+      border-radius: 14px;
+      padding: 12px;
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .maps-link {
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 16px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+    }
+
+    .maps-link:hover {
+      background: var(--primary-dark);
+    }
+
+    .empty {
+      background: white;
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius);
+      padding: 24px 16px;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    footer {
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.85rem;
+      padding: 22px 8px 0;
+    }
+
+    @media (min-width: 680px) {
+      .card {
+        display: grid;
+        grid-template-columns: 230px 1fr;
+      }
+
+      .image-wrap {
+        height: 100%;
+        aspect-ratio: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Athens Travel Guide</h1>
+      <p class="subtitle" data-i18n="subtitle">A compact guide to highlights in Athens.</p>
+    </header>
+
+    <section class="toolbar" aria-label="Guide controls">
+      <div class="language-toggle" aria-label="Language">
+        <button type="button" id="lang-en" data-lang="en">English</button>
+        <button type="button" id="lang-vi" data-lang="vi">Tiếng Việt</button>
+      </div>
+
+      <input
+        id="search"
+        class="search"
+        type="search"
+        autocomplete="off"
+        placeholder="Search attractions..."
+        aria-label="Search attractions"
+      />
+
+      <div class="categories" id="categories" aria-label="Categories"></div>
+    </section>
+
+    <p class="meta" id="result-count"></p>
+    <section class="list" id="attractions-list" aria-live="polite"></section>
+
+    <footer>
+      <span data-i18n="footer">Images and audio are loaded from external Google Drive links.</span>
+    </footer>
+  </main>
+
+  <script>
+    // ============================================================
+    // ===== EDIT YOUR ATTRACTIONS HERE ===========================
+    // Replace image/audio URLs with public, direct Google Drive links.
+    //
+    // Tip for Drive media links:
+    // Use a direct format like:
+    // https://drive.google.com/uc?export=view&id=YOUR_FILE_ID
+    // or:
+    // https://drive.google.com/uc?export=download&id=YOUR_FILE_ID
+    // ============================================================
+
+    const attractions = [
+      {
+        id: 1,
+        category: "Historical",
+        title: {
+          en: "Acropolis",
+          vi: "Acropolis"
+        },
+        description: {
+          en: "The Acropolis is the most iconic landmark in Athens. Standing high above the city, this ancient citadel includes famous monuments such as the Parthenon and offers wide views over modern Athens.",
+          vi: "Acropolis là địa danh nổi tiếng nhất ở Athens. Nằm trên ngọn đồi cao nhìn xuống thành phố, khu thành cổ này có nhiều công trình nổi tiếng như đền Parthenon và mang đến tầm nhìn rộng ra Athens hiện đại."
+        },
+        image: "https://drive.google.com/uc?export=view&id=YOUR_ACROPOLIS_IMAGE_ID",
+        audio: {
+          en: "https://drive.google.com/uc?export=download&id=YOUR_ACROPOLIS_AUDIO_EN_ID",
+          vi: "https://drive.google.com/uc?export=download&id=YOUR_ACROPOLIS_AUDIO_VI_ID"
+        },
+        maps_url: "https://www.google.com/maps/search/?api=1&query=Acropolis%20Athens"
+      },
+      {
+        id: 2,
+        category: "Historical",
+        title: {
+          en: "Parthenon",
+          vi: "Đền Parthenon"
+        },
+        description: {
+          en: "The Parthenon is the most famous temple on the Acropolis. Built in the 5th century BC, it was dedicated to the goddess Athena and remains one of the great symbols of ancient Greece.",
+          vi: "Đền Parthenon là ngôi đền nổi tiếng nhất trên Acropolis. Được xây dựng vào thế kỷ thứ 5 trước Công nguyên, đền thờ nữ thần Athena và vẫn là một trong những biểu tượng lớn của Hy Lạp cổ đại."
+        },
+        image: "https://drive.google.com/uc?export=view&id=YOUR_PARTHENON_IMAGE_ID",
+        audio: {
+          en: "https://drive.google.com/uc?export=download&id=YOUR_PARTHENON_AUDIO_EN_ID",
+          vi: "https://drive.google.com/uc?export=download&id=YOUR_PARTHENON_AUDIO_VI_ID"
+        },
+        maps_url: "https://www.google.com/maps/search/?api=1&query=Parthenon%20Athens"
+      },
+      {
+        id: 3,
+        category: "Neighborhood",
+        title: {
+          en: "Plaka",
+          vi: "Khu Plaka"
+        },
+        description: {
+          en: "Plaka is one of the oldest and most charming neighborhoods in Athens. Its narrow streets, small shops, cafés and neoclassical houses make it a pleasant area to explore on foot.",
+          vi: "Plaka là một trong những khu phố cổ và quyến rũ nhất ở Athens. Những con đường nhỏ, cửa hàng, quán cà phê và các ngôi nhà tân cổ điển khiến nơi đây rất phù hợp để đi bộ khám phá."
+        },
+        image: "https://drive.google.com/uc?export=view&id=YOUR_PLAKA_IMAGE_ID",
+        audio: {
+          en: "https://drive.google.com/uc?export=download&id=YOUR_PLAKA_AUDIO_EN_ID",
+          vi: "https://drive.google.com/uc?export=download&id=YOUR_PLAKA_AUDIO_VI_ID"
+        },
+        maps_url: "https://www.google.com/maps/search/?api=1&query=Plaka%20Athens"
+      },
+      {
+        id: 4,
+        category: "Viewpoint",
+        title: {
+          en: "Lycabettus Hill",
+          vi: "Đồi Lycabettus"
+        },
+        description: {
+          en: "Lycabettus Hill is one of the best viewpoints in Athens. From the top, visitors can see the Acropolis, the city center and, on clear days, the sea in the distance.",
+          vi: "Đồi Lycabettus là một trong những điểm ngắm cảnh đẹp nhất ở Athens. Từ trên đỉnh đồi, du khách có thể nhìn thấy Acropolis, trung tâm thành phố và vào những ngày trời quang có thể thấy biển ở phía xa."
+        },
+        image: "https://drive.google.com/uc?export=view&id=YOUR_LYCABETTUS_IMAGE_ID",
+        audio: {
+          en: "https://drive.google.com/uc?export=download&id=YOUR_LYCABETTUS_AUDIO_EN_ID",
+          vi: "https://drive.google.com/uc?export=download&id=YOUR_LYCABETTUS_AUDIO_VI_ID"
+        },
+        maps_url: "https://www.google.com/maps/search/?api=1&query=Lycabettus%20Hill%20Athens"
+      },
+      {
+        id: 5,
+        category: "Museum",
+        title: {
+          en: "National Archaeological Museum",
+          vi: "Bảo tàng Khảo cổ Quốc gia"
+        },
+        description: {
+          en: "The National Archaeological Museum is one of the most important museums in Greece. It contains an extensive collection of ancient Greek art, sculpture, jewelry and historical objects.",
+          vi: "Bảo tàng Khảo cổ Quốc gia là một trong những bảo tàng quan trọng nhất ở Hy Lạp. Nơi đây có bộ sưu tập lớn về nghệ thuật Hy Lạp cổ đại, tượng điêu khắc, trang sức và các hiện vật lịch sử."
+        },
+        image: "https://drive.google.com/uc?export=view&id=YOUR_MUSEUM_IMAGE_ID",
+        audio: {
+          en: "https://drive.google.com/uc?export=download&id=YOUR_MUSEUM_AUDIO_EN_ID",
+          vi: "https://drive.google.com/uc?export=download&id=YOUR_MUSEUM_AUDIO_VI_ID"
+        },
+        maps_url: "https://www.google.com/maps/search/?api=1&query=National%20Archaeological%20Museum%20Athens"
+      }
+    ];
+
+    // ============================================================
+    // ===== APP CODE BELOW - NORMALLY NO NEED TO EDIT ============
+    // ============================================================
+
+    const categories = ["All", "Historical", "Museum", "Neighborhood", "Viewpoint", "Food & Drink", "Shopping"];
+
+    const translations = {
+      en: {
+        subtitle: "A compact guide to highlights in Athens.",
+        searchPlaceholder: "Search attractions...",
+        all: "All",
+        audioGuide: "Audio guide",
+        audioUnavailable: "Audio unavailable",
+        imageUnavailable: "Image unavailable",
+        openMaps: "Open in Google Maps",
+        results: count => `${count} ${count === 1 ? "attraction" : "attractions"} found`,
+        noResults: "No attractions found. Try another search or category.",
+        footer: "Images and audio are loaded from external Google Drive links."
+      },
+      vi: {
+        subtitle: "Cẩm nang ngắn gọn về các điểm nổi bật ở Athens.",
+        searchPlaceholder: "Tìm địa điểm...",
+        all: "Tất cả",
+        audioGuide: "Hướng dẫn âm thanh",
+        audioUnavailable: "Không có âm thanh",
+        imageUnavailable: "Không có hình ảnh",
+        openMaps: "Mở trong Google Maps",
+        results: count => `Tìm thấy ${count} địa điểm`,
+        noResults: "Không tìm thấy địa điểm nào. Hãy thử từ khóa hoặc danh mục khác.",
+        footer: "Hình ảnh và âm thanh được tải từ các liên kết Google Drive bên ngoài."
+      }
+    };
+
+    const state = {
+      language: localStorage.getItem("athensGuideLanguage") || "en",
+      category: "All",
+      search: ""
+    };
+
+    const listEl = document.getElementById("attractions-list");
+    const categoriesEl = document.getElementById("categories");
+    const searchEl = document.getElementById("search");
+    const resultCountEl = document.getElementById("result-count");
+    const langButtons = document.querySelectorAll("[data-lang]");
+
+    function t(key, value) {
+      const entry = translations[state.language][key];
+      return typeof entry === "function" ? entry(value) : entry;
+    }
+
+    function setLanguage(language) {
+      state.language = language;
+      localStorage.setItem("athensGuideLanguage", language);
+      document.documentElement.lang = language;
+      render();
+    }
+
+    function setCategory(category) {
+      state.category = category;
+      render();
+    }
+
+    function normalize(value) {
+      return String(value || "").toLowerCase().trim();
+    }
+
+    function getFilteredAttractions() {
+      const query = normalize(state.search);
+
+      return attractions.filter(item => {
+        const matchesCategory = state.category === "All" || item.category === state.category;
+
+        const searchableText = [
+          item.category,
+          item.title.en,
+          item.title.vi,
+          item.description.en,
+          item.description.vi
+        ].join(" ");
+
+        const matchesSearch = !query || normalize(searchableText).includes(query);
+
+        return matchesCategory && matchesSearch;
+      });
+    }
+
+    function renderCategories() {
+      categoriesEl.innerHTML = "";
+
+      categories.forEach(category => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `category-btn ${state.category === category ? "active" : ""}`;
+        button.textContent = category === "All" ? t("all") : category;
+        button.addEventListener("click", () => setCategory(category));
+        categoriesEl.appendChild(button);
+      });
+    }
+
+    function createImage(item) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "image-wrap";
+
+      if (!item.image) {
+        wrapper.textContent = t("imageUnavailable");
+        return wrapper;
+      }
+
+      const img = document.createElement("img");
+      img.src = item.image;
+      img.alt = item.title[state.language] || item.title.en || "Attraction image";
+      img.loading = "lazy";
+      img.addEventListener("error", () => {
+        wrapper.innerHTML = "";
+        wrapper.textContent = t("imageUnavailable");
+      });
+
+      wrapper.appendChild(img);
+      return wrapper;
+    }
+
+    function createAudio(item) {
+      const audioUrl = item.audio && item.audio[state.language];
+
+      if (!audioUrl) {
+        const notice = document.createElement("div");
+        notice.className = "notice";
+        notice.textContent = t("audioUnavailable");
+        return notice;
+      }
+
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.preload = "none";
+      audio.src = audioUrl;
+      audio.addEventListener("error", () => {
+        const notice = document.createElement("div");
+        notice.className = "notice";
+        notice.textContent = t("audioUnavailable");
+        audio.replaceWith(notice);
+      });
+
+      return audio;
+    }
+
+    function renderAttractions() {
+      const filtered = getFilteredAttractions();
+      listEl.innerHTML = "";
+      resultCountEl.textContent = t("results", filtered.length);
+
+      if (filtered.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = t("noResults");
+        listEl.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const content = document.createElement("div");
+        content.className = "content";
+
+        const category = document.createElement("span");
+        category.className = "category-label";
+        category.textContent = item.category;
+
+        const title = document.createElement("h2");
+        title.textContent = item.title[state.language] || item.title.en;
+
+        const description = document.createElement("p");
+        description.className = "description";
+        description.textContent = item.description[state.language] || item.description.en;
+
+        const audioLabel = document.createElement("p");
+        audioLabel.className = "audio-label";
+        audioLabel.textContent = t("audioGuide");
+
+        const mapsLink = document.createElement("a");
+        mapsLink.className = "maps-link";
+        mapsLink.href = item.maps_url;
+        mapsLink.target = "_blank";
+        mapsLink.rel = "noopener noreferrer";
+        mapsLink.textContent = t("openMaps");
+
+        content.appendChild(category);
+        content.appendChild(title);
+        content.appendChild(description);
+        content.appendChild(audioLabel);
+        content.appendChild(createAudio(item));
+        content.appendChild(mapsLink);
+
+        card.appendChild(createImage(item));
+        card.appendChild(content);
+        listEl.appendChild(card);
+      });
+    }
+
+    function renderStaticText() {
+      document.querySelectorAll("[data-i18n]").forEach(element => {
+        const key = element.getAttribute("data-i18n");
+        element.textContent = t(key);
+      });
+
+      searchEl.placeholder = t("searchPlaceholder");
+
+      langButtons.forEach(button => {
+        button.classList.toggle("active", button.dataset.lang === state.language);
+        button.setAttribute("aria-pressed", button.dataset.lang === state.language ? "true" : "false");
+      });
+    }
+
+    function render() {
+      renderStaticText();
+      renderCategories();
+      renderAttractions();
+    }
+
+    langButtons.forEach(button => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    searchEl.addEventListener("input", event => {
+      state.search = event.target.value;
+      renderAttractions();
+    });
+
+    render();
+  </script>
+</body>
+</html>
