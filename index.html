@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Athens Travel Guide</title>
-
   <style>
     :root {
       --bg: #f6f8fb;
@@ -118,7 +117,10 @@
       gap: 8px;
       overflow-x: auto;
       padding: 10px 0 4px;
+      scrollbar-width: none;
     }
+
+    .categories::-webkit-scrollbar { display: none; }
 
     .category-btn {
       white-space: nowrap;
@@ -173,9 +175,7 @@
       display: block;
     }
 
-    .content {
-      padding: 16px;
-    }
+    .content { padding: 16px; }
 
     .category-label {
       display: inline-flex;
@@ -233,9 +233,7 @@
       text-decoration: none;
     }
 
-    .maps-link:hover {
-      background: var(--primary-dark);
-    }
+    .maps-link:hover { background: var(--primary-dark); }
 
     .empty {
       background: white;
@@ -275,126 +273,87 @@
       <p class="subtitle" data-i18n="subtitle">A compact guide to highlights in Athens.</p>
     </header>
 
-    <section class="toolbar">
-      <div class="language-toggle">
+    <section class="toolbar" aria-label="Guide controls">
+      <div class="language-toggle" aria-label="Language">
         <button type="button" id="lang-en" data-lang="en">English</button>
         <button type="button" id="lang-vi" data-lang="vi">Tiếng Việt</button>
       </div>
 
-      <input id="search" class="search" type="search" autocomplete="off" placeholder="Search attractions..." />
-      <div class="categories" id="categories"></div>
+      <input id="search" class="search" type="search" autocomplete="off" placeholder="Search attractions..." aria-label="Search attractions" />
+      <div class="categories" id="categories" aria-label="Categories"></div>
     </section>
 
     <p class="meta" id="result-count"></p>
-    <section class="list" id="attractions-list"></section>
+    <section class="list" id="attractions-list" aria-live="polite"></section>
 
     <footer>
-      <span data-i18n="footer">Images are loaded from public image URLs.</span>
+      <span data-i18n="footer">Images are loaded from public image URLs. Audio can be added later.</span>
     </footer>
   </main>
 
   <script>
-    // ============================================================
-    // EDIT YOUR ATTRACTIONS HERE
-    // Audio is empty for now. Later you can add audio links.
-    // ============================================================
-
     const attractions = [
       {
         id: 1,
         category: "Historical",
-        title: {
-          en: "Acropolis",
-          vi: "Acropolis"
-        },
+        title: { en: "Acropolis", vi: "Acropolis" },
         description: {
           en: "The Acropolis is the most iconic landmark in Athens. Standing high above the city, this ancient citadel includes famous monuments such as the Parthenon and offers wide views over modern Athens.",
           vi: "Acropolis là địa danh nổi tiếng nhất ở Athens. Nằm trên ngọn đồi cao nhìn xuống thành phố, khu thành cổ này có nhiều công trình nổi tiếng như đền Parthenon và mang đến tầm nhìn rộng ra Athens hiện đại."
         },
-        image: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Acropolis_of_Athens_01361.JPG",
-        audio: {
-          en: "",
-          vi: ""
-        },
+        image: "https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?auto=format&fit=crop&w=1200&q=80",
+        audio: { en: "", vi: "" },
         maps_url: "https://www.google.com/maps/search/?api=1&query=Acropolis%20Athens"
       },
       {
         id: 2,
         category: "Historical",
-        title: {
-          en: "Parthenon",
-          vi: "Đền Parthenon"
-        },
+        title: { en: "Parthenon", vi: "Đền Parthenon" },
         description: {
           en: "The Parthenon is the most famous temple on the Acropolis. Built in the 5th century BC, it was dedicated to the goddess Athena and remains one of the great symbols of ancient Greece.",
           vi: "Đền Parthenon là ngôi đền nổi tiếng nhất trên Acropolis. Được xây dựng vào thế kỷ thứ 5 trước Công nguyên, đền thờ nữ thần Athena và vẫn là một trong những biểu tượng lớn của Hy Lạp cổ đại."
         },
-        image: "https://upload.wikimedia.org/wikipedia/commons/d/da/The_Parthenon_in_Athens.jpg",
-        audio: {
-          en: "",
-          vi: ""
-        },
+        image: "https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=1200&q=80",
+        audio: { en: "", vi: "" },
         maps_url: "https://www.google.com/maps/search/?api=1&query=Parthenon%20Athens"
       },
       {
         id: 3,
         category: "Neighborhood",
-        title: {
-          en: "Plaka",
-          vi: "Khu Plaka"
-        },
+        title: { en: "Plaka", vi: "Khu Plaka" },
         description: {
           en: "Plaka is one of the oldest and most charming neighborhoods in Athens. Its narrow streets, small shops, cafés and neoclassical houses make it a pleasant area to explore on foot.",
           vi: "Plaka là một trong những khu phố cổ và quyến rũ nhất ở Athens. Những con đường nhỏ, cửa hàng, quán cà phê và các ngôi nhà tân cổ điển khiến nơi đây rất phù hợp để đi bộ khám phá."
         },
-        image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Plaka_Athens_Greece.jpg",
-        audio: {
-          en: "",
-          vi: ""
-        },
+        image: "https://images.unsplash.com/photo-1601581875309-fafbf2d3ed3a?auto=format&fit=crop&w=1200&q=80",
+        audio: { en: "", vi: "" },
         maps_url: "https://www.google.com/maps/search/?api=1&query=Plaka%20Athens"
       },
       {
         id: 4,
         category: "Viewpoint",
-        title: {
-          en: "Lycabettus Hill",
-          vi: "Đồi Lycabettus"
-        },
+        title: { en: "Lycabettus Hill", vi: "Đồi Lycabettus" },
         description: {
           en: "Lycabettus Hill is one of the best viewpoints in Athens. From the top, visitors can see the Acropolis, the city center and, on clear days, the sea in the distance.",
           vi: "Đồi Lycabettus là một trong những điểm ngắm cảnh đẹp nhất ở Athens. Từ trên đỉnh đồi, du khách có thể nhìn thấy Acropolis, trung tâm thành phố và vào những ngày trời quang có thể thấy biển ở phía xa."
         },
-        image: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Lycabettus_Hill_from_Acropolis.jpg",
-        audio: {
-          en: "",
-          vi: ""
-        },
+        image: "https://images.unsplash.com/photo-1603565816234-10c414d958c1?auto=format&fit=crop&w=1200&q=80",
+        audio: { en: "", vi: "" },
         maps_url: "https://www.google.com/maps/search/?api=1&query=Lycabettus%20Hill%20Athens"
       },
       {
         id: 5,
         category: "Museum",
-        title: {
-          en: "National Archaeological Museum",
-          vi: "Bảo tàng Khảo cổ Quốc gia"
-        },
+        title: { en: "National Archaeological Museum", vi: "Bảo tàng Khảo cổ Quốc gia" },
         description: {
           en: "The National Archaeological Museum is one of the most important museums in Greece. It contains an extensive collection of ancient Greek art, sculpture, jewelry and historical objects.",
           vi: "Bảo tàng Khảo cổ Quốc gia là một trong những bảo tàng quan trọng nhất ở Hy Lạp. Nơi đây có bộ sưu tập lớn về nghệ thuật Hy Lạp cổ đại, tượng điêu khắc, trang sức và các hiện vật lịch sử."
         },
-        image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/National_Archaeological_Museum_Athens.jpg",
-        audio: {
-          en: "",
-          vi: ""
-        },
+        image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80",
+        audio: { en: "", vi: "" },
         maps_url: "https://www.google.com/maps/search/?api=1&query=National%20Archaeological%20Museum%20Athens"
       }
     ];
-
-    // ============================================================
-    // APP CODE BELOW
-    // ============================================================
 
     const categories = ["All", "Historical", "Museum", "Neighborhood", "Viewpoint", "Food & Drink", "Shopping"];
 
@@ -409,7 +368,7 @@
         openMaps: "Open in Google Maps",
         results: count => `${count} ${count === 1 ? "attraction" : "attractions"} found`,
         noResults: "No attractions found. Try another search or category.",
-        footer: "Images are loaded from public image URLs."
+        footer: "Images are loaded from public image URLs. Audio can be added later."
       },
       vi: {
         subtitle: "Cẩm nang ngắn gọn về các điểm nổi bật ở Athens.",
@@ -421,7 +380,7 @@
         openMaps: "Mở trong Google Maps",
         results: count => `Tìm thấy ${count} địa điểm`,
         noResults: "Không tìm thấy địa điểm nào. Hãy thử từ khóa hoặc danh mục khác.",
-        footer: "Hình ảnh được tải từ các liên kết công khai."
+        footer: "Hình ảnh được tải từ các liên kết công khai. Bạn có thể thêm âm thanh sau."
       }
     };
 
@@ -460,27 +419,16 @@
 
     function getFilteredAttractions() {
       const query = normalize(state.search);
-
       return attractions.filter(item => {
         const matchesCategory = state.category === "All" || item.category === state.category;
-
-        const searchableText = [
-          item.category,
-          item.title.en,
-          item.title.vi,
-          item.description.en,
-          item.description.vi
-        ].join(" ");
-
+        const searchableText = [item.category, item.title.en, item.title.vi, item.description.en, item.description.vi].join(" ");
         const matchesSearch = !query || normalize(searchableText).includes(query);
-
         return matchesCategory && matchesSearch;
       });
     }
 
     function renderCategories() {
       categoriesEl.innerHTML = "";
-
       categories.forEach(category => {
         const button = document.createElement("button");
         button.type = "button";
@@ -494,48 +442,41 @@
     function createImage(item) {
       const wrapper = document.createElement("div");
       wrapper.className = "image-wrap";
-
       if (!item.image) {
         wrapper.textContent = t("imageUnavailable");
         return wrapper;
       }
-
       const img = document.createElement("img");
       img.src = item.image;
       img.alt = item.title[state.language] || item.title.en || "Attraction image";
       img.loading = "lazy";
-
+      img.referrerPolicy = "no-referrer";
       img.addEventListener("error", () => {
         wrapper.innerHTML = "";
         wrapper.textContent = t("imageUnavailable");
       });
-
       wrapper.appendChild(img);
       return wrapper;
     }
 
     function createAudio(item) {
       const audioUrl = item.audio && item.audio[state.language];
-
       if (!audioUrl) {
         const notice = document.createElement("div");
         notice.className = "notice";
         notice.textContent = t("audioUnavailable");
         return notice;
       }
-
       const audio = document.createElement("audio");
       audio.controls = true;
       audio.preload = "none";
       audio.src = audioUrl;
-
       audio.addEventListener("error", () => {
         const notice = document.createElement("div");
         notice.className = "notice";
         notice.textContent = t("audioUnavailable");
         audio.replaceWith(notice);
       });
-
       return audio;
     }
 
@@ -543,7 +484,6 @@
       const filtered = getFilteredAttractions();
       listEl.innerHTML = "";
       resultCountEl.textContent = t("results", filtered.length);
-
       if (filtered.length === 0) {
         const empty = document.createElement("div");
         empty.className = "empty";
@@ -551,46 +491,36 @@
         listEl.appendChild(empty);
         return;
       }
-
       filtered.forEach(item => {
         const card = document.createElement("article");
         card.className = "card";
-
         const content = document.createElement("div");
         content.className = "content";
-
         const category = document.createElement("span");
         category.className = "category-label";
         category.textContent = item.category;
-
         const title = document.createElement("h2");
         title.textContent = item.title[state.language] || item.title.en;
-
         const description = document.createElement("p");
         description.className = "description";
         description.textContent = item.description[state.language] || item.description.en;
-
         const audioLabel = document.createElement("p");
         audioLabel.className = "audio-label";
         audioLabel.textContent = t("audioGuide");
-
         const mapsLink = document.createElement("a");
         mapsLink.className = "maps-link";
         mapsLink.href = item.maps_url;
         mapsLink.target = "_blank";
         mapsLink.rel = "noopener noreferrer";
         mapsLink.textContent = t("openMaps");
-
         content.appendChild(category);
         content.appendChild(title);
         content.appendChild(description);
         content.appendChild(audioLabel);
         content.appendChild(createAudio(item));
         content.appendChild(mapsLink);
-
         card.appendChild(createImage(item));
         card.appendChild(content);
-
         listEl.appendChild(card);
       });
     }
@@ -600,9 +530,7 @@
         const key = element.getAttribute("data-i18n");
         element.textContent = t(key);
       });
-
       searchEl.placeholder = t("searchPlaceholder");
-
       langButtons.forEach(button => {
         button.classList.toggle("active", button.dataset.lang === state.language);
         button.setAttribute("aria-pressed", button.dataset.lang === state.language ? "true" : "false");
